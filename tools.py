@@ -5,7 +5,7 @@ import random
 from time import sleep
 
 
-from data.font.font import *
+from font import *
 
 
 def load_image(file_name: str, *, ext: str='png', color_key: tuple | bool=True, scale: tuple=()) -> pygame.Surface:

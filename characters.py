@@ -1,6 +1,6 @@
 from tools import *
 from weapon import *
-from data.font.font import *
+from font import *
 
 
 WEAPONS = [Gun, Bow]
