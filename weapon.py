@@ -1,6 +1,5 @@
 from tools import *
 
-
 class Arrow(pygame.sprite.Sprite):
     def __init__(self, display: pygame.Surface, start: tuple, end: tuple, speed: int, gravity: int):
         self.x, self.y = start
@@ -43,8 +42,6 @@ class Arrow(pygame.sprite.Sprite):
         self.display.blit(self.image,
                           (self.rect.x - self.image.get_width() // 2 - scroll[0],
                            self.rect.y - self.image.get_height() // 2 - scroll[1]))
-        
-
 
         x0, y0 = self.rect.center
         x1 = math.cos(to_rad(degrees)) * self.half_size + x0 - 2
@@ -55,7 +52,6 @@ class Arrow(pygame.sprite.Sprite):
     
     def get_hitbox(self):
         return self.hitbox
-
 
 class Lightning(pygame.sprite.Sprite):
     def __init__(self, display: pygame.Surface, window_size: tuple):
@@ -109,7 +105,6 @@ class Lightning(pygame.sprite.Sprite):
             pygame.draw.lines(self.surf, (100, 120, 155), False, self.segment_list, 4)
             pygame.draw.lines(self.surf, (220, 230, 255), False, self.segment_list, 2)
             self.display.blit(self.surf, (0, 0))
-
 
 class Lightning1(pygame.sprite.Sprite):
     def __init__(self, display: pygame.Surface, start: tuple, end: tuple):
@@ -181,7 +176,6 @@ class Lightning1(pygame.sprite.Sprite):
     def add_point(self):
         self.points.insert(-3, self.points[-2])    
 
-
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, display: pygame.Surface, start: tuple, end: tuple, speed: int):
         self.x, self.y = start
@@ -225,7 +219,6 @@ class Bullet(pygame.sprite.Sprite):
     def get_hitbox(self):
         return self.hitbox
 
-
 class Bullets:
     def __init__(self, display: pygame.Surface, speed: int):
         self.display = display
@@ -249,7 +242,6 @@ class Bullets:
     def extend(self, bullets):
         self.bullets.extend(bullets.bullets)
 
-
 class Arrows:
     def __init__(self, display: pygame.Surface, speed: int, gravity: int):
         self.display = display
@@ -270,7 +262,6 @@ class Arrows:
     
     def add_arrow(self, start: tuple, end: tuple):
         self.arrows.append(Arrow(self.display, start, end, self.speed, self.gravity))
-
 
 class Bow(pygame.sprite.Sprite):
     def __init__(self, display: pygame.Surface):
@@ -298,7 +289,6 @@ class Bow(pygame.sprite.Sprite):
             player.rect.centerx - scroll[0] - gun_rect.centerx,
             player.rect.centery - scroll[1] - gun_rect.centery
         ))
-
 
 class Gun(pygame.sprite.Sprite):
     def __init__(self, display: pygame.Surface):

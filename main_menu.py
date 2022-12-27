@@ -1,18 +1,19 @@
 import sys
 
-from tools import *
 from game import main_game
 from time import sleep
+from tools import *
 
+FPS = 60
+WINDOW_SIZE = monitor
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
+
 monitor = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-WINDOW_SIZE = monitor
 screen = pygame.display.set_mode(monitor, pygame.FULLSCREEN)
 display = pygame.Surface(monitor)
 clock = pygame.time.Clock()
-FPS = 60
 
 font_3 = Font("data/font/letters.png", 3)
 font_4 = Font("data/font/letters.png", 4)

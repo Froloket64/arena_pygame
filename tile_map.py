@@ -1,13 +1,11 @@
 from tools import *
 
-
 class Tile:
     def __init__(self, rect, tile_type, ramp=False, platform=False):
         self.rect = rect
         self.tile_type = tile_type
         self.ramp = ramp
         self.platform = platform
-
 
 class Map:
     def __init__(self, display, filename):

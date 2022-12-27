@@ -1,9 +1,7 @@
-from engine import *
-
-from weapon import *
 from characters import *
 from tile_map import *
-
+from engine import *
+from weapon import *
 
 images = [
     "data/images/bg1",
@@ -20,7 +18,6 @@ music = [
     "data/music/Run-Amok.mp3"
 ]
 
-
 def load_bg(size=None):
     image = load_image(images[random.randrange(len(images))])
     if size:
@@ -33,7 +30,6 @@ def load_bg(size=None):
     surf.set_alpha(light_force)
     image.blit(surf, (0, 0))
     return image
-
 
 class Console:
     def __init__(self, display, font, enemies, player, WINDOW_SIZE):
@@ -98,6 +94,7 @@ class Console:
                 elif event.key == pygame.K_BACKSPACE:
                     self.back_space_pressed = True
                     self.back_space_counter = 0
+
                     # if command from history had been modified put it to current command
                     if self.history[self.index]:
                         self.history[self.index] = self.history[self.index][:-1]
@@ -112,18 +109,21 @@ class Console:
                         if self.history[self.index] in self.commands:
                             self.commands[self.history[self.index]]()
                             self.history[0] = self.history[self.index]
+
                             if len(self.history) > 1:
-                                if (
-                                    self.history[0] == self.history[1]
-                                ):  # don't log similar commands
+                                if self.history[0] == self.history[1]:  # don't log similar commands
                                     del self.history[0]
+
                             self.history.insert(0, "")  # log commands
+
                             if len(self.history) > 20:
                                 del self.history[19:]
+
                         self.user_text = ""
                         self.index = 0
                     else:
                         letter = event.unicode
+
                         if letter in self.letters:
                             if len(self.user_text) < 39:
                                 self.history[0] = self.history[self.index]
@@ -153,25 +153,26 @@ class Console:
                         self.history[self.index] = self.history[self.index][:-1]
 
             self.display.blit(self.surf, (10, self.WINDOW_SIZE[1] - 40))
+
             if self.user_text:
                 if self.user_text in self.commands:
                     color = (100, 190, 60)
                 else:
                     color = (230, 230, 230)
+
                 rendered_text = self.font.render(self.user_text, color)
                 self.display.blit(rendered_text, (20, self.WINDOW_SIZE[1] - 32))
 
             self.user_text = self.history[self.index]
+
             coords = (20, self.WINDOW_SIZE[1] - self.info.get_height() - 60)
+
             self.display.blit(self.background_surf, (coords[0] - 10, coords[1] - 13))
-            self.display.blit(
-                self.info, coords
-            )
+            self.display.blit(self.info, coords)
 
     def change(self):
         self.is_opened = not self.is_opened
         return self.is_opened
-
 
 class Generator:
     def __init__(self, tile_map, player, enemies):
@@ -206,12 +207,13 @@ class Generator:
             else:
                 self.spawn_time_limit = self.spawn_time_max
 
-
 class GameOverMenu(Loop):
     def user_init(self):
         self.font8 = Font(self.font_path, 10)
         self.game_over_surf = pygame.Surface(self.WINDOW_SIZE)
+
         text = self.font8.render("game over", (250, 250, 250))
+
         self.game_over_surf.blit(
             text,
             (
@@ -282,7 +284,6 @@ class GameOverMenu(Loop):
     
     def set_backgounrd(self, surf):
         self.backgound_surface = surf
-
 
 class SettingsMenu(Loop):
     def user_init(self):
@@ -381,7 +382,6 @@ class SettingsMenu(Loop):
         status = self.closing
         self.closing = False
         return status
-
 
 class Game(Loop):
     def __init__(self, WINDOW_SIZE: tuple | None = None, FPS: int = 60, font_path: None | str = None, screen=None, map_path = "data/maps/map.txt"):
@@ -603,7 +603,6 @@ class Game(Loop):
         ) / 5
         return [int(self.true_scroll[0]), int(self.true_scroll[1])]
 
-
 class ChooseMapMenu(Loop):
     def user_init(self):
         self.collide_button_sound = pygame.mixer.Sound("data/sounds/button1.mp3")
@@ -694,7 +693,6 @@ class ChooseMapMenu(Loop):
         self.back_button.update()
         self.labyrinth_button.update()
 
-
 class SoundsMenu(Loop):
     def user_init(self):
         self.collide_button_sound = pygame.mixer.Sound("data/sounds/button1.mp3")
@@ -744,13 +742,13 @@ class SoundsMenu(Loop):
         self.display.blit(self.text_effects, (self.effects_slider.rect.x - 150, self.effects_slider.rect.y - 5))
         self.music_slider.update(self.clicked, (mx, my))
         self.effects_slider.update(self.clicked, (mx, my))
+
         pygame.mixer.music.set_volume(self.music_slider.get_value())
 
         self.back_button.update()
 
     def run(self):
         super().run()
-
 
 class MainMenu(Loop):
     def user_init(self):
@@ -866,7 +864,6 @@ class MainMenu(Loop):
         self.choose_map_button.update()
         self.volume_button.update()
         self.exit_button.update()
-
 
 if __name__ == "__main__":
     # game = Game(None, 60, "data/font/letters.png")

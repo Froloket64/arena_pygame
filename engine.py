@@ -1,6 +1,5 @@
 from tools import *
 
-
 class Loop:
     def __init__(self, WINDOW_SIZE: tuple | None = None, FPS: int = 60, font_path: None | str = None, screen = None):
         initialized = pygame.display.get_init()

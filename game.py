@@ -1,8 +1,7 @@
-from tools import *
-from weapon import *
 from characters import *
 from tile_map import *
-
+from weapon import *
+from tools import *
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -45,12 +44,10 @@ to_main_menu_button = Button(
     collide_button_sound
 )
 
-
 def draw_fps():
     if player.inventory.is_opened:
         text = font2.render(f"fps {int(clock.get_fps())}", (220, 220, 220))
         display.blit(text, (WINDOW_SIZE[0] - 70, 5))
-
 
 class Console:
     def __init__(self, display, font, enemies, player):
@@ -168,7 +165,6 @@ class Console:
         self.is_opened = not self.is_opened
         return self.is_opened
 
-
 class Generator:
     def __init__(self, tile_map, player, enemies):
         self.tile_map = tile_map
@@ -187,17 +183,14 @@ class Generator:
                     random.randint(-500, -400), random.randint(2100, 2200)
                 )
 
-
 generator = Generator(tile_map, player, enemies)
 console = Console(display, font2, enemies, player)
-
 
 # scrolling of the objects when player is moving
 def parallax_scrolling() -> list:
     true_scroll[0] += (player.rect.x - true_scroll[0] - WINDOW_SIZE[0] // 2 + player.rect.width // 2) / 5
     true_scroll[1] += (player.rect.y - true_scroll[1] - WINDOW_SIZE[1] // 2 + player.rect.height // 2) / 5
     return [int(true_scroll[0]), int(true_scroll[1])]
-
 
 def main_game():
     clicked = False
@@ -278,7 +271,6 @@ def main_game():
         clock.tick(FPS)
 
     player.stop()
-
 
 if __name__ == "__main__":
     main_game()

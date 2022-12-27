@@ -2,16 +2,13 @@ from tools import *
 from weapon import *
 from font import *
 
-
 WEAPONS = [Gun, Bow]
-
 
 def check_if_weapon(obj):
     for weap in WEAPONS:
         if isinstance(obj, weap):
             return True
     return False
-
 
 class Inventory:
     def __init__(self, display, font):
@@ -20,23 +17,26 @@ class Inventory:
         self.is_opened = False
 
         self.cell_image = pygame.Surface((60, 60))
+
         pygame.draw.rect(self.cell_image, (70, 80, 170), (1, 1, 58, 58), 0, 10)
         pygame.draw.rect(self.cell_image, (10, 20, 80), (1, 1, 58, 58), 2, 10)
+
         self.cell_image.set_colorkey((0, 0, 0))
         self.cell_image.set_alpha(230)
         
         self.choosen_cell_image = pygame.Surface((60, 60))
+
         pygame.draw.rect(self.choosen_cell_image, (243, 198, 13), (0, 0, 60, 60), 0, 10)
         pygame.draw.rect(self.choosen_cell_image, (203, 158, 0), (0, 0, 60, 60), 2, 10)
+
         self.choosen_cell_image.set_colorkey((0, 0, 0))
         self.choosen_cell_image.set_alpha(240)
 
-
-        self.cells = list()
+        self.cells = []
         for i in range(3):
             for k in range(5):
                 self.cells.append(pygame.Rect(k * 66 + 20, i * 66 + 30, 60, 60))
-        
+
         self.current_item = 0
 
         self.draged = False
@@ -79,15 +79,16 @@ class Inventory:
     def get_item(self, pos):
         item = self.items[pos]
         self.items[pos] = None
+
         return item
     
     def get_current_item(self):
         return self.items[int(self.current_item)]
 
-
 class Entitiy(pygame.sprite.Sprite):
     def __init__(self, display):
         pygame.sprite.Sprite.__init__(self)
+
         self.display = display
         self.movement = [0, 0]
         self.animation_frames = {}
@@ -103,7 +104,6 @@ class Entitiy(pygame.sprite.Sprite):
         self.player_image_id = None
         self.tile_rects = None
         self.collisions = {"top": False, "bottom": False, "right": False, "left": False}
-
 
 # circular motion
 class EnemyBeta(pygame.sprite.Sprite):
@@ -129,7 +129,6 @@ class EnemyBeta(pygame.sprite.Sprite):
         self.rect.y += (self.dy)
 
         pygame.draw.rect(self.display, (200, 200, 255), self.rect)
-
 
 class Player(Entitiy):
     def __init__(self, display, coords, rects, platforms, WINDOW_SIZE):
@@ -254,6 +253,7 @@ class Player(Entitiy):
     def fire(self, scroll, mx, my):
         mx += scroll[0]
         my += scroll[1]
+
         if check_if_weapon(self.item):
             if isinstance(self.item, Gun):
                 self.bullets.add_bullet(self.rect.center, (mx, my))
@@ -266,6 +266,7 @@ class Player(Entitiy):
         self.bullets.update(scroll, self.rects)
         self.arrows.update(scroll, self.rects)
         self.item = self.inventory.get_current_item()
+
         if self.item:
             self.item.update(scroll, mx, my, player)
     
@@ -287,13 +288,16 @@ class Player(Entitiy):
                                 item = self.inventory.get_item(i)
                                 self.inventory.add_item(self.inventory.draged_item, i)
                                 self.inventory.draged_item = item
+
                             break
                         else:
                             # if there is item in the cell put it into the draged_item
                             item = self.inventory.get_item(i)
+
                             if item is not None:
                                 self.inventory.draged_item = item
                                 self.inventory.draged = True
+
                             break
                 else:
                     # if the mouse does not collide with any of the
@@ -304,6 +308,7 @@ class Player(Entitiy):
                 for i in range(len(self.inventory.cells[:5])):
                     if self.inventory.cells[i].collidepoint((mx, my)):
                         self.inventory.current_item = i
+
                         break
                 else:
                     self.is_fire = True
@@ -314,12 +319,15 @@ class Player(Entitiy):
     
     def move(self):
         self.movement = [0, 0]
+
         if self.moving_right:
             self.movement[0] += self.speed
         if self.moving_left:
             self.movement[0] -= self.speed
+
         self.movement[1] += self.player_y_momentum
         self.player_y_momentum += self.gravity
+
         if self.player_y_momentum > 10:
             self.player_y_momentum = 10
         
@@ -337,9 +345,9 @@ class Player(Entitiy):
             self.real_moving_down = False
             self.moving_down_counter = 0
 
-
         if self.collisions["top"]:
             self.player_y_momentum = 0
+
         if self.collisions['bottom']:
             self.player_y_momentum = 0
             self.air_timer = 0
@@ -370,6 +378,7 @@ class Player(Entitiy):
     def draw_healthbar(self):
         text = f"life  {self.health} / {100}"
         surf = self.font.render(text, (220, 220, 220))
+
         self.display.blit(surf, (self.WINDOW_SIZE[0] - 230, 10))
 
         pygame.draw.rect(  # lighter line backgrouns
@@ -377,40 +386,43 @@ class Player(Entitiy):
             (70, 70, 70),
             (self.WINDOW_SIZE[0] - 280, 30, 250, 30),
             0,
-            3)
+            3
+        )
         pygame.draw.rect(  # dark backgrouns
             self.display,
             (20, 20, 20),
             (self.WINDOW_SIZE[0] - 270, 38, 230, 14),
             0,
-            3)
-
+            3
+        )
         pygame.draw.rect(  # red line
             self.display,
             (170, 20, 20),
             (self.WINDOW_SIZE[0] - 280, 30, 250 * (self.health / 100), 30),
             0,
-            3)
+            3
+        )
         pygame.draw.rect(  # dark red line
             self.display,
             (140, 10, 10),
             (self.WINDOW_SIZE[0] - 280, 52, 250 * (self.health / 100), 8),
             0,
-            3)
+            3
+        )
         pygame.draw.rect(  # light red line
             self.display,
             (200, 30, 30),
             (self.WINDOW_SIZE[0] - 280, 30, 250 * (self.health / 100), 8),
             0,
-            3)
-
+            3
+        )
         pygame.draw.rect(  # border
             self.display,
             (30, 30, 30),
             (self.WINDOW_SIZE[0] - 280, 30, 250, 30),
             2,
-            3)
-
+            3
+        )
 
 class Enemy_Sniper(Entitiy):
     def __init__(self, display, coords, rects, platforms, targetx, targety, player):
@@ -459,6 +471,7 @@ class Enemy_Sniper(Entitiy):
         self.distance = self.get_distance()
         if self.distance < 800:
             self.fire_counter += 1
+
             if self.fire_counter > self.fire_limit:
                 self.fire_counter = 0
                 self.fire(self.player.rect)
@@ -471,20 +484,24 @@ class Enemy_Sniper(Entitiy):
             self.player_action, self.player_frame = change_action(self.player_action, self.player_frame, 'idle')
         else:
             self.player_action, self.player_frame = change_action(self.player_action, self.player_frame, 'run')
+
             if self.movement[0] < 0:
                 self.player_flip = True
             else:
                 self.player_flip = False
+
         self.player_frame += 1
         if self.player_frame >= len(self.animation_database[self.player_action]):
             self.player_frame = 0
+
         self.player_image_id = self.animation_database[self.player_action][self.player_frame]
         self.image = self.animation_frames[self.player_image_id]
-        self.display.blit(pygame.transform.flip(self.image, self.player_flip, False),
-                     (self.rect.x - scroll[0], self.rect.y - scroll[1]))
+
+        self.display.blit(
+            pygame.transform.flip(self.image, self.player_flip, False),
+            (self.rect.x - scroll[0], self.rect.y - scroll[1])
+        )
         
-        # self.display.blit(pygame.transform.flip(self.image, self.player_flip, False),
-        #              (self.rect.x - scroll[0], self.rect.y - scroll[1]))
         self.update_item(scroll)
 
         self.draw_health(scroll)
@@ -500,6 +517,7 @@ class Enemy_Sniper(Entitiy):
                 x, y = self.rect.x - scroll[0] + 100, self.rect.y - scroll[1] + 30
             elif self.moving_left:
                 x, y = self.rect.x - scroll[0] - 100, self.rect.y - scroll[1] + 30
+
         self.gun.update(scroll, x, y, self)
 
     def draw_health(self, scroll):
@@ -511,12 +529,16 @@ class Enemy_Sniper(Entitiy):
 
     def move(self):
         self.movement = [0, 0]
+
         if self.moving_right:
             self.movement[0] += self.speed
+
         if self.moving_left:
             self.movement[0] -=self.speed
+
         self.movement[1] += self.player_y_momentum
         self.player_y_momentum += self.gravity
+
         if self.player_y_momentum > 10:
             self.player_y_momentum = 10
         
@@ -529,7 +551,7 @@ class Enemy_Sniper(Entitiy):
             self.real_moving_down = False
             self.moving_down_counter = 0
         
-        # following the player if he is close to the enemy
+        # follow the player if he is close to the enemy
         if self.distance < 500:
             if self.get_x_distance() > 200:
                 if self.rect.x < self.player.rect.x:
@@ -542,7 +564,7 @@ class Enemy_Sniper(Entitiy):
         if self.rect.y > self.player.rect.y and chance(0.01):
             self.jump()
         
-        # falling from platforms if player located lower then enemy
+        # fall down platforms if player is located below the enemy
         if self.collisions["bottom"] and (self.player.rect.bottom - self.rect.bottom) > 30:
             self.moving_down = True
         else:
@@ -553,7 +575,6 @@ class Enemy_Sniper(Entitiy):
             self.rect, self.collisions = move(self.rect, self.movement, self.rects)
         else:
             self.rect, self.collisions = move(self.rect, self.movement, self.rects + self.platforms)
-
 
         if self.collisions["top"]:
             self.player_y_momentum = 0
@@ -606,7 +627,6 @@ class Enemy_Sniper(Entitiy):
     def get_x_distance(self) -> int:
         return abs(self.rect.x - self.player.rect.x)
 
-
 class Enemies:
     def __init__(self, display, rects, platforms, player):
         self.display = display
@@ -626,6 +646,7 @@ class Enemies:
         ]
         for sound in self.hurt_sounds:
             sound.set_volume(0.2)
+
         self.death_sound = pygame.mixer.Sound("data/sounds/death.mp3")
         self.death_sound.set_volume(0.05)
 
@@ -648,57 +669,69 @@ class Enemies:
         while i < len(self.enemies):
             self.enemies[i].update(scroll)
 
-            # check if player bullets collide with enemies
+            # check if player's bullets collide with enemies
             k = 0
             while k < len(bullets.bullets):
                 if bullets.bullets[k].get_hitbox().colliderect(self.enemies[i].rect):
                     self.enemies[i].health -= bullets.bullets[k].damage
+
                     del bullets.bullets[k]
+
                     if self.enemies[i].health <= 0:
                         self.enemy_killed = True
+
                         if chance(0.1):
                             self.sound_counter = self.sound_pause
                             self.death_sound.play()
                         
-                        # if enemy died save his bullets
+                        # save enemy's bullets if he died
                         self.bullets.extend(self.enemies[i].bullets)
+
                         del self.enemies[i]
                         i -= 1
+
                         break
                     else:
                         if self.sound_counter == 0:
                             self.sound_counter = self.sound_pause
                             self.hurt_sounds[random.randrange(len(self.hurt_sounds))].play()
+
                     k -= 1
                 k += 1
             
-            # check if player arrows collide with enemies
+            # check if player's arrows collide with enemies
             k = 0
             while k < len(arrows.arrows):
                 if arrows.arrows[k].get_hitbox().colliderect(self.enemies[i].rect):
                     self.enemies[i].health -= arrows.arrows[k].damage
+
                     del arrows.arrows[k]
+
                     if self.enemies[i].health <= 0:
                         self.enemy_killed = True
+
                         if chance(0.1):
                             self.sound_counter = self.sound_pause
                             self.death_sound.play()
                         
                         # if enemy died save his bullets
                         self.bullets.extend(self.enemies[i].bullets)
+
                         del self.enemies[i]
                         i -= 1
+
                         break
                     else:
                         if self.sound_counter == 0:
                             self.sound_counter = self.sound_pause
                             self.hurt_sounds[random.randrange(len(self.hurt_sounds))].play()
+
                     k -= 1
                 k += 1
 
             i += 1
         
-        # check if enemies bullets or arrows collide with player
+        # check if enemy bullets or arrows collide with player
         for enemy in self.enemies:
             i = 0
             while i < len(enemy.bullets.bullets):
@@ -708,7 +741,7 @@ class Enemies:
                 else:
                     i += 1
         
-        # update bullets of died enemies
+        # update dead enemies' bullets
         self.bullets.update(scroll, self.rects)
         i = 0
         while i < len(self.bullets.bullets):
@@ -721,7 +754,9 @@ class Enemies:
     def set_volume(self, num):
         for sound in self.hurt_sounds:
             sound.set_volume(num + 0.1)
+
         self.death_sound.set_volume(max(0, num - 0.5))
+
         for enemy in self.enemies:
             enemy.set_volume(num)
 

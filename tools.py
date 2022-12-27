@@ -1,12 +1,11 @@
-import pygame
 import math
 import sys
 import random
 from time import sleep
 
+import pygame
 
 from font import *
-
 
 def load_image(file_name: str, *, ext: str='png', color_key: tuple | bool=True, scale: tuple=()) -> pygame.Surface:
     image = pygame.image.load(f'{file_name}.{ext}').convert()
@@ -15,7 +14,6 @@ def load_image(file_name: str, *, ext: str='png', color_key: tuple | bool=True, 
     if scale:
         image = pygame.transform.scale(image, (image.get_width() * scale[0], image.get_height() * scale[1]))
     return image
-
 
 # animation_functions_start_________________________________________________#
 def load_animation(path, frame_durations, animation_frames) -> list:
@@ -32,16 +30,12 @@ def load_animation(path, frame_durations, animation_frames) -> list:
         n += 1
     return animation_frame_data
 
-
 def change_action(action_var, frame, new_value) -> tuple:
     if action_var != new_value:
         action_var = new_value
         frame = 0
     return action_var, frame
-
-
 # animation_functions_end___________________________________________________#
-
 
 # collide_functions_start___________________________________________________#
 def collision_test(rect: pygame.Rect, tiles: list) -> list:
@@ -50,7 +44,6 @@ def collision_test(rect: pygame.Rect, tiles: list) -> list:
         if rect.colliderect(tile.rect):
             hit_list.append(tile)
     return hit_list
-
 
 def move(rect: pygame.Rect, movement: tuple, tiles) -> tuple:
     collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
@@ -107,9 +100,7 @@ def move(rect: pygame.Rect, movement: tuple, tiles) -> tuple:
                 collision_types['bottom'] = True
     
     return rect, collision_types
-
 # collide_functions_end_____________________________________________________#
-
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, image, pressed_image, coords, display, sound):
@@ -140,7 +131,6 @@ class Button(pygame.sprite.Sprite):
     def change_coords(self, coords):
         self.rect = self.image.get_rect(topleft=coords)
 
-
 class TextButton(Button):
     def __init__(self, text, coords, display, sound, font_size=5):
         self.font5 = Font("data/font/letters.png", font_size)
@@ -151,7 +141,6 @@ class TextButton(Button):
 
         self.width, self.height = self.size = image.get_size()
         self.rect.center = coords
-
 
 class Slider(pygame.sprite.Sprite):
     def __init__(self, display, coords, size=(200, 20)):
@@ -211,15 +200,12 @@ class Slider(pygame.sprite.Sprite):
         self.display.blit(image, self.rect)
         self.display.blit(self.point_image, self.point_rect)
 
-
 # trigonometry functions
 def to_deg(rad: float) -> float:
     return rad * (180 / math.pi)
 
-
 def to_rad(deg: float) -> float:
     return deg * (math.pi / 180)
-
 
 # function for chance in the game
 def chance(num: float = 1.00) -> int:
