@@ -26,7 +26,7 @@ background = load_image("data/images/bg", scale=(2, 2))
 # load sounds
 collide_button_sound = pygame.mixer.Sound("data/sounds/button.mp3")
 
-tile_map = Map(display, "data/map.txt")
+tile_map = Map(display, "data/maps/map.txt")
 player = Player(display, (200, 50), tile_map.get_rects(), tile_map.get_platforms(), WINDOW_SIZE)
 
 enemies = Enemies(display, tile_map.get_rects(), tile_map.get_platforms(), player)
